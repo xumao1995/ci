@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.spdb.ci.mapper.AppointMapper">
+    <resultMap id="appointWithBranchAndBusiness" type="com.spdb.ci.bean.dto.AppointDto">
+        <id column="id" property="id"></id>
+        <result column="appoint_date" property="appointDate"></result>
+        <result column="appoint_time" property="appointTime"></result>
+        <result column="customer_name" property="customerName"></result>
+        <result column="status" property="status"></result>
+        <association property="branchPo" javaType="BranchPo">
+            <id column="bra_id" property="id"></id>
+            <result column="branch_name" property="branchName"></result>
+        </association>
+        <association property="businessPo" javaType="BusinessPo">
+            <id column="bus_id" property="id"></id>
+            <result column="business_name" property="businessName"></result>
+        </association>
+
+    </resultMap>
+    <insert id="addAppoint" parameterType="ReqAppoint"  >
+        INSERT INTO
+	        tb_appoint(appoint_date,appoint_time,customer_name,id_type,id_no,tel,note,branch_id,business_id)
+        VALUES
+            (#{appointDate},#{appointTime},#{customerName},#{idType},#{idNo},#{tel},#{note},#{branchId},#{businessId})
+    </insert>
+
+    <select id="findAppointListByTel" resultMap="appointWithBranchAndBusiness">
+        SELECT
+            app.id,appoint_date,appoint_time,customer_name,`status`,branch_id AS bra_id,branch_name,business_id AS bus_id,business_name
+        FROM
+            tb_appoint AS app INNER JOIN tb_branch AS bra ON  app.branch_id = bra.id AND app.tel = #{tel}
+            INNER JOIN tb_business AS bus ON  app.business_id = bus.id
+        ORDER BY create_date DESC
+    </select>
+
+
+
+</mapper>

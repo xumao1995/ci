@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.spdb.ci.mapper.RegionMapper">
+    <!--含有网点的结果集-->
+    <resultMap id="regionWithBranch" type="com.spdb.ci.bean.dto.RegionDto" autoMapping="true">
+        <id column="reg_id" property="id"></id>
+        <collection property="branchPoList" ofType="com.spdb.ci.bean.po.BranchPo" autoMapping="false">
+            <id column="bra_id" property="id"></id>
+            <result column="branch_name" property="branchName"></result>
+            <result column="address" property="address"></result>
+        </collection>
+    </resultMap>
+    <select id="findAll" resultMap="regionWithBranch" >
+        select
+            reg.id as reg_id,
+            region_name,
+            bra.id as bra_id,
+            branch_name,
+            address
+        from
+            tb_region as reg left join tb_branch as bra on reg.id = bra.region_id
+    </select>
+
+
+
+</mapper>

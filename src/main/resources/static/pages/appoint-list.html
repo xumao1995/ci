@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>预约记录</title>
+    <link rel="stylesheet" href="../bootstrap/bootstrap.css">
+    <link rel="stylesheet" href="../bootstrap/bootstrap-datetimepicker.min.css">
+
+</head>
+<body>
+<div class="container">
+    <header class="header"></header>
+    <div class="content">
+        <div class="jumbotron bg-info">
+            <h3 class="text-center">我的预约记录</h3>
+            <hr/>
+            <div class="row text-right">
+                <a href="#">预约</a>
+            </div>
+            <div class="row">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>序号</th>
+                        <th>网点</th>
+                        <th>业务内容</th>
+                        <th>预约时间</th>
+                        <th>状态</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody id="myAppointList">
+                    <tr class="success">
+                        <td class="text-center" colspan="6">暂无预约记录</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript" src="../jquery/jquery-3.3.1.js"></script>
+<script type="text/javascript" src="../bootstrap/bootstrap.js"></script>
+<script type="text/javascript" src="../bootstrap/bootstrap-timepicker.min.js"></script>
+<script type="text/javascript" src="../js/api.js"></script>
+<script type="text/javascript">
+    $(function () {
+        let tel = getParam();
+        let myAppointList = requestMyAppoint(tel);
+        console.log("appointDtoList:",myAppointList);
+        initAppointList(myAppointList);
+
+    })
+
+    function initAppointList(appointList) {
+        if(appointList.length<=0){
+            return;
+        }
+        $('#myAppointList').empty();
+        let clazz = "";
+        $.each(appointList,function (index,item){
+            switch (item.status) {
+                case "待办理":
+                    clazz = "warning";
+                    break;
+                case "已办理":
+                    clazz = "success";
+                    break;
+                case "过期":
+                    clazz = "primary";
+                    break;
+                default:
+                    clazz = "active";
+                    break;
+            }
+            let option = `<tr class="${clazz}"><td>${index+1}</td><td>${item.branch}</td><td>${item.business}</td><td>${item.appointDate}</td><td>${item.status}</td><td>${item.operation}</td></tr>`;
+            $("#myAppointList").append(option);
+        });
+    }
+</script>
+</html>

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>业务预约</title>
+    <link rel="stylesheet" href="../bootstrap/bootstrap.css">
+    <link rel="stylesheet" href="../bootstrap/bootstrap-datetimepicker.min.css">
+    <style>
+        textarea#note{
+            resize: none;
+        }
+    </style>
+
+</head>
+<body>
+<div class="container">
+    <header class="header"></header>
+    <div class="content">
+        <div class="jumbotron bg-info">
+            <h3 class="text-center">网点预约</h3>
+            <hr/>
+            <div class="row text-right">
+                <a href="appoint-list.html?tel=176">我的预约记录</a>
+            </div>
+            <div class="row">
+                <div class="col-md-8">
+                    <form class="form-horizontal" role="form">
+                        <div class="form-group">
+                            <label for="region" class="col-md-2 control-label">区域：</label>
+                            <div class="col-md-10">
+                                <select class="form-control" id="region" name="region">
+
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="branch" class="col-md-2 control-label">网点：</label>
+                            <div class="col-md-10">
+                                <select class="form-control" id="branch" name="branch">
+
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">业务类型：</label>
+                            <div class="col-md-10">
+                                <label for="business-type1" class="radio-inline">
+                                    <input type="radio" id="business-type1" value="0" name="businessType" checked>个人业务
+                                </label>
+                                <label for="id-type2" class="radio-inline">
+                                    <input type="radio" id="business-type2" value="1" name="businessType" >对公业务
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="business-content" class="col-md-2 control-label">业务内容：</label>
+                            <div class="col-md-10">
+                                <select class="form-control" id="business-content" name="businessName">
+
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="appoint-date" class="col-md-2 control-label">预约日期：</label>
+                            <div class="col-md-10">
+                                <input type="date" class="form-control" id="appoint-date" name="appointDate">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="appoint-time" class="col-md-2 control-label">预约时间：</label>
+                            <div class="col-md-10">
+                                <select class="form-control" id="appoint-time" name="appointTime">
+                                    <option value="8:00-9:00">8:00-9:00</option>
+                                    <option value="9:00-10:00">9:00-10:00</option>
+                                    <option value="10:00-11:00">10:00-11:00</option>
+                                    <option value="11:00-12:00">11:00-12:00</option>
+                                    <option value="13:00-14:00">13:00-14:00</option>
+                                    <option value="14:00-15:00">14:00-15:00</option>
+                                    <option value="15:00-16:00">15:00-16:00</option>
+                                    <option value="16:00-17:00">16:00-17:00</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="customer" class="col-md-2 control-label">姓名：</label>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control" id="customer" name="customer">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">证件类型：</label>
+                            <div class="col-md-10">
+                                <label for="id-type1" class="radio-inline">
+                                    <input type="radio" id="id-type1" value="1" name="idType" checked>身份证
+                                </label>
+                                <label for="id-type2" class="radio-inline">
+                                    <input type="radio" id="id-type2" value="2" name="idType">银行卡
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="id-no" class="col-md-2 control-label">证件号码：</label>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control" id="id-no" name="idNo">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="tel" class="col-md-2 control-label">电话号码：</label>
+                            <div class="col-md-10">
+                                <input type="tel" class="form-control" id="tel" name="tel" placeholder="同一电话每天仅能预约一次">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="note" class="col-md-2 control-label">备注：</label>
+                            <div class="col-md-10">
+                                <textarea class="form-control" id="note" name="note" rows="3" placeholder="限150个汉字"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-offset-2 col-md-10 text-center">
+                            <button class="btn btn-info btn-sm" id="submit">预约</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+<script type="text/javascript" src="../jquery/jquery-3.3.1.js"></script>
+<script type="text/javascript" src="../bootstrap/bootstrap.js"></script>
+<script type="text/javascript" src="../bootstrap/bootstrap-timepicker.min.js"></script>
+<script type="text/javascript" src="../js/api.js"></script>
+<script type="text/javascript">
+    $(function () {
+        /*$("#appoint-date").datetimepicker({
+            format: 'yyyy-mm-dd hh:ii'
+        });*/
+    })
+</script>
+<script type="text/javascript">
+    $(function(){
+        let region = requestRegion();
+        let business = requestBusiness();
+        initRegion(region);
+        initBusiness(0,business);
+        $('#region').change((e)=>{
+            let id = $('#region').val();
+            initBranch(id,region);
+        })
+        $('input[type=radio][name=businessType]').change(function () {
+            let type = this.value;
+            initBusiness(type,business);
+        })
+        $('#submit').click((e)=>{
+            submitAppoint();
+        })
+    })
+    /*初始化区域下拉框*/
+    function initRegion(regions){
+        /*清空区域下拉框*/
+        $('#region').empty();
+        //添加首选项
+        let option = $("<option>").val("-1").text("请选择");
+        $("#region").append(option);
+        //jquery遍历添加option
+        $.each(regions,function (index,item){
+            let option = $("<option>").val(item.id).text(item.regionName);
+            $("#region").append(option)
+        });
+    }
+
+    /*初始化网点下拉框*/
+    function initBranch(id,regions) {
+        /*清空网点下拉框*/
+        $('#branch').empty();
+        //添加首选项
+        let option = $("<option>").val("-1").text("请选择");
+        $("#branch").append(option);
+        //jquery遍历添加option
+        $.each(regions,function (index,region){
+            if(id==region.id){
+                $.each(region.branchPoList,function (j,branch){
+                    let option = $("<option>").val(branch.id).text(branch.branchName);
+                    $("#branch").append(option)
+                })
+            }
+        });
+    }
+
+    /*初始化业务内容下拉框*/
+    function initBusiness(type,business) {
+        /*清空网点下拉框*/
+        $('#business-content').empty();
+        //添加首选项
+        let option = $("<option>").val("-1").text("请选择");
+        $("#business-content").append(option);
+        //jquery遍历添加option
+        $.each(business,function (index,item){
+            if(type==item.type){
+                let option = $("<option>").val(item.id).text(item.businessName);
+                $("#business-content").append(option)
+            }
+        });
+    }
+
+
+</script>
+</html>

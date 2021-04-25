@@ -1,0 +1,21 @@
+server:
+  servlet:
+    context-path: /ci
+  port: 8089
+
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/db_ci?useAffectedRows=true
+    username: root
+    password: 123456
+    type: com.alibaba.druid.pool.DruidDataSource
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.spdb.ci.bean.po, com.spdb.ci.bean.dto, com.spdb.ci.bean.vo
+  configuration:
+    map-underscore-to-camel-case: true
+    lazy-loading-enabled: true
+
