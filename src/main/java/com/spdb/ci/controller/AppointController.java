@@ -33,10 +33,15 @@ public class AppointController {
 
     @GetMapping("/customer")
     public List<RepAppoint> getAppointListByTel(@RequestParam("tel") String tel){
-        System.out.println("tel:"+tel);
         List<AppointDto> appointDtoList = appointService.getAppointListByTel(tel);
         List<RepAppoint> appointList = transformAppointDto2Vo(appointDtoList);
         System.out.println(appointList);
         return appointList;
+    }
+
+    @GetMapping("/queue")
+    public Integer getQueuePersonal(@RequestParam("branch") String branch,@RequestParam("date") String date, @RequestParam("time") String time){
+        Integer num = appointService.getQueuePersonal(branch,date,time);
+        return num;
     }
 }
