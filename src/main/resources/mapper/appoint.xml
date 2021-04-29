@@ -33,6 +33,16 @@
         ORDER BY create_date DESC
     </select>
 
+    <select id="getQueuePersonal" resultType="Integer">
+        SELECT
+            COUNT(1) AS num
+        FROM
+            tb_appoint
+        WHERE
+            `status` = '0' AND branch_id = #{branch} AND appoint_time = #{appointTime}
+            AND appoint_date = #{appointDate} AND create_date &lt;= NOW();
+    </select>
+
 
 
 </mapper>
