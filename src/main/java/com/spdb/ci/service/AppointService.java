@@ -17,4 +17,6 @@ public interface AppointService {
     Integer addAppoint(ReqAppoint reqAppoint);
 
     List<AppointDto> getAppointListByTel(String tel);
+
+    Integer getQueuePersonal(String branch, String date, String time);
 }
