@@ -120,3 +120,33 @@ function requestMyAppoint(tel) {
     })
     return appointList;
 }
+
+/**
+ * 请求当前排队人数
+ * @param branch
+ * @param date
+ * @param time
+ * @returns {number}
+ */
+function requestQueuePersonal(branch,date,time) {
+    let num = 0;
+    $.ajax({
+        url:'/ci/appoint/queue',
+        async:false,
+        data:{
+            'branch':branch,
+            'date':date,
+            'time':time
+        },
+        type:'get',
+        contentType:'application/json',
+        success:(data)=>{
+            console.log("请求当前排队人数成功：",data);
+            num = data;
+        },
+        error:(e)=>{
+            console.log("请求当前排队人数失败");
+        }
+    })
+    return num;
+}
