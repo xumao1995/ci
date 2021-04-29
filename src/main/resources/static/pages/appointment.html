@@ -4,10 +4,14 @@
     <meta charset="UTF-8">
     <title>业务预约</title>
     <link rel="stylesheet" href="../bootstrap/bootstrap.css">
-    <link rel="stylesheet" href="../bootstrap/bootstrap-datetimepicker.min.css">
+    <link rel="stylesheet" href="../bootstrap/bootstrap-datetimepicker.css">
     <style>
         textarea#note{
             resize: none;
+        }
+        .form-tip {
+            margin-top: 5px;
+            color: #a94442;
         }
     </style>
 
@@ -63,23 +67,17 @@
                         <div class="form-group">
                             <label for="appoint-date" class="col-md-2 control-label">预约日期：</label>
                             <div class="col-md-10">
-                                <input type="date" class="form-control" id="appoint-date" name="appointDate">
+                                <input type="text" class="form-control" id="appoint-date" name="appointDate" readonly>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="appoint-time" class="col-md-2 control-label">预约时间：</label>
                             <div class="col-md-10">
                                 <select class="form-control" id="appoint-time" name="appointTime">
-                                    <option value="8:00-9:00">8:00-9:00</option>
-                                    <option value="9:00-10:00">9:00-10:00</option>
-                                    <option value="10:00-11:00">10:00-11:00</option>
-                                    <option value="11:00-12:00">11:00-12:00</option>
-                                    <option value="13:00-14:00">13:00-14:00</option>
-                                    <option value="14:00-15:00">14:00-15:00</option>
-                                    <option value="15:00-16:00">15:00-16:00</option>
-                                    <option value="16:00-17:00">16:00-17:00</option>
+
                                 </select>
                             </div>
+                            <div id="queue-num" class="form-tip col-md-offset-2 col-md-10"> 当前有<strong> </strong>人排队</div>
                         </div>
                         <div class="form-group">
                             <label for="customer" class="col-md-2 control-label">姓名：</label>
@@ -129,25 +127,45 @@
 </body>
 <script type="text/javascript" src="../jquery/jquery-3.3.1.js"></script>
 <script type="text/javascript" src="../bootstrap/bootstrap.js"></script>
-<script type="text/javascript" src="../bootstrap/bootstrap-timepicker.min.js"></script>
+<script type="text/javascript" src="../bootstrap/bootstrap-datetimepicker.js"></script>
+<script type="text/javascript" src="../bootstrap/locales/bootstrap-datetimepicker.zh-CN.js"></script>
 <script type="text/javascript" src="../js/api.js"></script>
 <script type="text/javascript">
     $(function () {
-        /*$("#appoint-date").datetimepicker({
-            format: 'yyyy-mm-dd hh:ii'
-        });*/
+        let now = new Date();
+        let netMonth = new Date();
+        netMonth.setMonth(now.getMonth()+1);
+        $('#appoint-date').datetimepicker({
+            language :'zh-cn',
+            format:'yyyy-mm-dd',
+            initialDate:now,
+            startDate:now,
+            endDate:netMonth,
+            todayBtn:true,
+            todayHighlight:true,
+            daysOfWeekDisabled:['0','6'],
+            minView:2,
+            autoclose:true,
+        });
     })
 </script>
 <script type="text/javascript">
     $(function(){
+        $('#queue-num').hide();
         let region = requestRegion();
         let business = requestBusiness();
         initRegion(region);
         initBusiness(0,business);
+
+        initAppointTime();
+        $('#appoint-date').change((e)=>{
+            initAppointTime();
+        });
         $('#region').change((e)=>{
             let id = $('#region').val();
             initBranch(id,region);
         })
+        setQueuePersonal();
         $('input[type=radio][name=businessType]').change(function () {
             let type = this.value;
             initBusiness(type,business);
@@ -199,11 +217,104 @@
         $.each(business,function (index,item){
             if(type==item.type){
                 let option = $("<option>").val(item.id).text(item.businessName);
-                $("#business-content").append(option)
+                $("#business-content").append(option);
             }
         });
     }
 
+    /*初始化时间段下拉框*/
+    function initAppointTime(){
+        let sysTime = new Date();
+        let now = sysTime.getHours();
+        let sysDate =  dateFormat(sysTime);
+        let date = $('#appoint-date').val();
+        console.log('sysDate:',sysDate);
+        console.log('date:',date);
+        let hourArr = ['9:00-10:00','10:00-11:00','11:00-12:00','13:00-14:00','14:00-15:00','15:00-16:00','16:00-17:00']
+        $('#appoint-time').empty();
+        let option = $("<option>").val("-1").text("请选择");
+        $('#appoint-time').append(option);
+        if(sysDate == date){
+            $.each(hourArr,function (index,item) {
+                let hour = item.split('-')[0].split(':')[0];
+                if(hour>now){
+                    let option = $("<option>").val(item).text(item);
+                    $("#appoint-time").append(option);
+                }
+            })
+        }
+        else if(sysDate < date){
+            $.each(hourArr,function (index,item) {
+                let option = $("<option>").val(item).text(item);
+                $("#appoint-time").append(option);
+            })
+        }
+    }
+
+    /*渲染当前排队人数*/
+    function setQueuePersonal() {
+        $('#region').change((e)=>{
+            $('#queue-num').hide();
+            let branch = $('#branch').val();
+            let date = $('#appoint-date').val();
+            let time = $('#appoint-time').val();
+            if(branch!='-1' && date!='' && time !='-1' ){
+                let num = requestQueuePersonal(branch,date,time);
+                $('#queue-num strong').text(num);
+                $('#queue-num').show();
+            }
+        });
+        $('#branch').change((e)=>{
+            $('#queue-num').hide();
+            let branch = $('#branch').val();
+            let date = $('#appoint-date').val();
+            let time = $('#appoint-time').val();
+            if(branch!='-1' && date!='' && time !='-1' ){
+                let num = requestQueuePersonal(branch,date,time);
+                $('#queue-num strong').text(num);
+                $('#queue-num').show();
+            }
+        });
+        $('#appoint-date').change((e)=>{
+            $('#queue-num').hide();
+            let branch = $('#branch').val();
+            let date = $('#appoint-date').val();
+            let time = $('#appoint-time').val();
+            if(branch!='-1' && date!='' && time !='-1' ){
+                let num = requestQueuePersonal(branch,date,time);
+                $('#queue-num strong').text(num);
+                $('#queue-num').show();
+            }
+        });
+
+
+        $('#appoint-time').change((e)=>{
+            $('#queue-num').hide();
+            let branch = $('#branch').val();
+            let date = $('#appoint-date').val();
+            let time = $('#appoint-time').val();
+            console.log("branch:",branch,"date:",date,"time:",time);
+            if(branch!='-1' && date!='' && time !='-1' ){
+                let num = requestQueuePersonal(branch,date,time);
+                $('#queue-num strong').text(num);
+                $('#queue-num').show();
+            }
+        });
+    }
+
+    /*系统时间格式化为yyyy-dd-mm eg:2021-04-29*/
+    function dateFormat(sysDate) {
+        let year =  sysDate.getFullYear();
+        let month = (sysDate.getMonth()+1);
+        let date =  sysDate.getDate();
+        if(month>0&&month<10){
+            month = "0"+month;
+        }
+        if(date>0&&date<10){
+            date = "0"+date;
+        }
+        return year+"-"+month+"-"+date;
+    }
 
 </script>
 </html>
