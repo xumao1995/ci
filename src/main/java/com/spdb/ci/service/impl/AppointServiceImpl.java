@@ -4,6 +4,7 @@ import com.spdb.ci.bean.dto.AppointDto;
 import com.spdb.ci.bean.vo.ReqAppoint;
 import com.spdb.ci.mapper.AppointMapper;
 import com.spdb.ci.service.AppointService;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -29,5 +30,10 @@ public class AppointServiceImpl implements AppointService {
     public List<AppointDto> getAppointListByTel(String tel) {
         List<AppointDto> appointDtoList = appointMapper.findAppointListByTel(tel);
         return appointDtoList;
+    }
+
+    @Override
+    public Integer getQueuePersonal(String branch, String date, String time) {
+        return appointMapper.getQueuePersonal(date, branch, time);
     }
 }
