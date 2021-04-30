@@ -1,0 +1,88 @@
+<!DOCTYPE html>  
+<html>  
+<head>  
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />  
+	<title>添加标注点-百度地图API</title>
+	<script type="text/javascript" src="../baiduapi/baiduapi.js"></script>
+</head>  
+
+<body>
+	<style type="text/css">  
+		html{height:100%}  
+		body{height:100%;margin:0 10px;}  
+		#container{height:100%;margin: 20px;} 
+		.info_ul{
+			margin:0 0 5px 0;
+			padding:0.2em 0;
+		} 
+		.info_li{
+			line-height: 26px;font-size: 15px;
+		}
+		.info_span{
+			width: 50px;display: inline-block;
+		}
+	</style>    
+	<div id="container"></div> 
+	<script type="text/javascript"> 
+		var map = new BMap.Map("container"); //初始化地图
+
+		var points = [
+		{"lng":108.894571,"lat":34.19907,peonum:"http://www.baidu.com",yuy:"http://www.baidu.com",addr:"陕西省西安市雁塔区锦业路6号绿地·智海大厦一层",phone:"(029)63603000"},
+		{"lng":108.888756,"lat":34.244426,peonum:"http://www.taobao.com",yuy:"http://www.baidu.com",addr:"陕西省西安市雁塔区科技路239号中华世纪城一期C8楼",phone:" "},
+		{"lng":108.944693,"lat":34.346022,peonum:"http://www.qq.com",yuy:"http://www.baidu.com",addr:"陕西省西安市未央区凤城八路158号风景御园24幢",phone:"(029)89151811,(029)89151825"},
+		{"lng":109.01745,"lat":34.214773,peonum:"http://www.qq.com",yuy:"http://www.baidu.com",addr:"雁翔路3168号雁翔广场2号楼1层10110号",phone:"(029)68205001"},
+		{"lng":108.947125,"lat":34.228735,peonum:"http://www.qq.com",yuy:"http://www.baidu.com",addr:"陕西省西安市雁塔区小寨西路98号皇家公馆英郡楼10101号",phone:"(029)63603636"},
+		{"lng":108.9341,"lat":34.165875,peonum:"http://www.qq.com",yuy:"http://www.baidu.com",addr:"西安市长安区广场北路31号",phone:"(029)89151811,(029)89151825"},
+		{"lng":108.972247,"lat":34.358419,peonum:"http://www.qq.com",yuy:"http://www.baidu.com",addr:"西安市未央区渭滨路与渭滨东路交叉路口东南侧(西航小区)",phone:"(029)61819811"},
+		{"lng":108.909925,"lat":34.234466,peonum:"http://www.qq.com",yuy:"http://www.baidu.com",addr:"高新区高新路51号陕西有色大厦1楼(西航小区)",phone:"(029)62655101,(029)62655104"},
+		{"lng":108.897033,"lat":34.217988,peonum:"http://www.qq.com",yuy:"http://www.baidu.com",addr:"唐延路45号陕西投资大厦1层(西航小区)",phone:"(029)68688234"},
+		{"lng":108.909955,"lat":34.24648,peonum:"http://www.qq.com",yuy:"http://www.baidu.com",addr:"高新二路与光远路十字向西200米新世纪大厦1层",phone:"(029)61815607"},
+		{"lng":108.972247,"lat":34.358419,peonum:"http://www.qq.com",yuy:"http://www.baidu.com",addr:"西安市未央区渭滨路与渭滨东路交叉路口东南侧(西航小区)",phone:"(029)61819811"}
+
+	
+		
+		];//数据准备
+
+		map.centerAndZoom(new BMap.Point(108.95493,34.286851), 13);//设置中心点和显示级别。中国。
+		
+		map.enableScrollWheelZoom();//滚轮放大缩小。
+		
+		addMarker(points);//添加标注。
+
+		function addMarker(points){  // 创建图标对象   
+			var point,marker;
+			// 创建标注对象并添加到地图   
+			for(var i = 0,pointsLen = points.length;i <pointsLen;i++){
+				point = new BMap.Point(points[i].lng,points[i].lat);	
+				marker = new BMap.Marker(point);   
+				map.addOverlay(marker); 
+				//给标注点添加点击事件。使用立即执行函数和闭包
+				(function() {
+					var thePoint = points[i];
+					marker.addEventListener("click",function(){
+						showInfo(this,thePoint);
+					});
+				})();
+			}
+		}
+
+		//显示信息窗口，显示标注点的信息。
+		function showInfo(thisMaker,point){
+			var sContent =
+			'<ul class="info_ul">'
+			+'<li class="info_li">'
+			+'<span class="info_span">地址：</span>' + point.addr + '</li>'
+			+'<li class="info_li">'
+			+'<span class="info_span">电话：</span>' + point.phone + '</li>'
+			+'<li class="info_li">排队人数>>><span class="info_span"></span>'+parseInt(10*Math.random())+'人</li>'
+			+'<li class="info_li">预约人数>>><span class="info_span"></span>'+parseInt(10*Math.random())+'人</li>'
+			+'<li class="info_li">办理业务>>><span class="info_span"></span>'+parseInt(3*Math.random()+1)+'人</li>'
+			+'<li class="info_li"><a href="'+point.yuy+'" target="_blank">立即预约</a><span class="info_span"></span></li>'
+			+'</ul>';
+			var infoWindow = new BMap.InfoWindow(sContent);// 创建信息窗口对象
+		   	thisMaker.openInfoWindow(infoWindow);//图片加载完毕重绘infowindow
+		   }
+
+		</script>  
+	</body>  
+	</html>
